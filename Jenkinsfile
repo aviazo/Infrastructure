@@ -11,7 +11,7 @@ pipeline {
     stages {
         stage('checkout code') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-ssh', url: 'git@github.com:lidorg-dev/hello-world-war.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-ssh', url: 'git@github.com:aviazo/hello-world-war.git']]])
             }
         }
         stage('Build') {
