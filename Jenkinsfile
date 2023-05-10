@@ -2,7 +2,7 @@
 pipeline {
 
     agent { 
-        label 'centos7' 
+        label 'docker' 
     }
 
     triggers {
