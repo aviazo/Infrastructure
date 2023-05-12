@@ -4,7 +4,11 @@ pipeline {
   }  
   environment {     
     DOCKERHUB_CREDENTIALS= credentials('docker_hub-aviazo')     
-  }    
+  } 
+
+  triggers {
+        pollSCM '* * * * *'
+    }   
   stages {         
     stage("Git Checkout"){           
       steps{                
