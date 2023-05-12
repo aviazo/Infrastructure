@@ -35,7 +35,7 @@ pipeline {
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                     echo 'Login Completed'
             }
-    
+         }   
          stage('Build and Push To Docker Image') {
             steps {
                         sh '''docker push aviazo/hello-world-war_mvn:${BUILD_ID}'''
@@ -43,5 +43,5 @@ pipeline {
            }
         
           }       
-        } 
+         
     } 
