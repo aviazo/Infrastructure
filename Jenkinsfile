@@ -35,9 +35,9 @@ pipeline {
 	echo 'Login Completed'                
       }           
     }               
-    stage('Push Image to Docker Hub') {         
+    stage('Push Image to Docker Hub + tag') {         
       steps{                            
-	sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
+	sh 'sudo docker push aviazo/hello-world-war_mvn:0.0.$BUILD_NUMBER'                 
     echo 'Push Image Completed'       
       }           
     }      
