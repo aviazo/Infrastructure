@@ -12,7 +12,7 @@ pipeline {
     }
 
     stages {
-        stage('checkout code') {
+         stage('checkout code') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [url: 'https://github.com/aviazo/hello-world-war.git']])
                 echo 'Git Checkout Completed'
@@ -20,7 +20,7 @@ pipeline {
         }
     
     
-        stage('Build') {
+         stage('Build') {
             steps {
                 script {
                     //def mvnHome = tool name: 'maven', type: 'maven'
@@ -30,13 +30,13 @@ pipeline {
                 }
             }
         }
-        stage('Login') {
+         stage('Login') {
             steps {
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                     echo 'Login Completed'
             }
     
-        stage('Build and Push To Docker Image') {
+         stage('Build and Push To Docker Image') {
             steps {
                         sh '''docker push aviazo/hello-world-war_mvn:${BUILD_ID}'''
             }
