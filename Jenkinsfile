@@ -7,9 +7,16 @@ pipeline {
   } 
 
   triggers {
-        pollSCM '* * * * *'
-    }   
-  stages {         
+   //Query repository every minute
+     pollSCM('* * * * *')
+  }
+
+  stages {
+    stage('Clean before clone') {
+      steps {
+        cleanWs()
+      }
+    }      
     stage("Git Checkout"){           
       steps{                
 	git branch: 'dev', url: 'https://github.com/aviazo/hello-world-war.git'             
