@@ -7,45 +7,46 @@ pipeline {
   } 
 
   triggers {
-        pollSCM '* * * * *'
-    }   
+            pollSCM '* * * * *'
+           }   
   stages {         
     stage("Git Checkout"){           
       steps{                
-	git branch: 'dev', url: 'https://github.com/aviazo/hello-world-war.git'             
-	echo 'Git Checkout Completed'            
-      }        
+	          git branch: 'dev', url: 'https://github.com/aviazo/hello-world-war.git'             
+	          echo 'Git Checkout Completed'            
+           }        
     }
-    stage('SonarQube Analysis') {
-        steps {
-            script {
-                //def sonarQubeScannerHome = tool name: 'sq1'
-                withSonarQubeEnv('sq1') {
-                    sh '''mvn clean verify sonar:sonar'''
-                }
-            }
-        }
-    }
-
+    
     stage('Build Docker Image') {         
       steps{                
-	sh 'sudo docker build -t aviazo/hello-world-war_mvn:$BUILD_NUMBER .'           
-        echo 'Build Image Completed'                
-      }           
+	          sh 'sudo docker build -t aviazo/hello-world-war_mvn:$BUILD_NUMBER .'           
+            echo 'Build Image Completed'                
+           }           
     }
 
     stage('Login to Docker Hub') {         
       steps{                            
-	sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'                 
-	echo 'Login Completed'                
-      }           
+	          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'                 
+	          echo 'Login Completed'                
+           }           
+    }
+
+    stage('SonarQube Analysis') {
+      steps {
+            script {
+            //def sonarQubeScannerHome = tool name: 'sq1'
+            withSonarQubeEnv('sq1') {
+            sh '''mvn clean verify sonar:sonar'''
+            }
+          }
+        }
     }
 
     stage('Push Image to Docker Hub') {         
       steps{                            
-	sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
-    echo 'Push Image Completed'       
-      }           
+	          sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
+            echo 'Push Image Completed'       
+           }           
     }      
   } //stages 
   
