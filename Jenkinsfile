@@ -11,27 +11,21 @@ pipeline {
            }   
   stages {  
 
-    stage('Scan') {
-      steps {
-        withSonarQubeEnv(installationName: 'sq1') { 
-          sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
-        }
-      }
-    }
-
-    stage("Quality Gate") {
-      steps {
-        timeout(time: 2, unit: 'MINUTES') {
-          waitForQualityGate abortPipeline: true
-        }
-      }
-    }
-
     stage("Git Checkout"){           
       steps{                
 	          git branch: 'dev', url: 'https://github.com/aviazo/hello-world-war.git'             
 	          echo 'Git Checkout Completed'            
            }        
+    }
+
+     stage('SonarQube Analysis') {
+        steps {
+            script {
+                    withSonarQubeEnv('sq1') {
+                    sh '''mvn clean verify sonar:sonar'''
+                }
+            }
+        }
     }
     
     stage('Build Docker Image') {         
