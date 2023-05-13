@@ -31,16 +31,22 @@ pipeline {
            }           
     }
 
-    stage('SonarQube Analysis') {
-      steps {
-            script {
-            //def sonarQubeScannerHome = tool name: 'sq1'
-            withSonarQubeEnv('sq1') {
-            sh '''mvn clean verify sonar:sonar'''
-            }
+    stage("build & SonarQube analysis") {
+          node {
+              withSonarQubeEnv('sq1') {
+                 sh 'mvn clean package sonar:sonar'
+              }
           }
-        }
-    }
+      }
+
+      stage("Quality Gate"){
+          timeout(time: 1, unit: 'HOURS') {
+              def qg = waitForQualityGate()
+              if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+              }
+          }
+      }
 
     stage('Push Image to Docker Hub') {         
       steps{                            
