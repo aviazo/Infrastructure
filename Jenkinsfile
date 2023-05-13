@@ -30,25 +30,20 @@ pipeline {
 	          echo 'Login Completed'                
            }           
     }
-    stage('build && SonarQube analysis') {
-      steps{
-             withSonarQubeEnv('sq1') {
-             // Optionally use a Maven environment you've configured already
-             withMaven(maven:'Maven 3.5') {
-             sh 'mvn clean package sonar:sonar'
-              }
-            }
-          }
+    stage('Scan') {
+      steps {
+        withSonarQubeEnv(installationName: 'sq1') { 
+          sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
         }
+      }
+    }
     stage("Quality Gate") {
       steps {
-             timeout(time: 1, unit: 'HOURS') {
-             // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
-             // true = set pipeline to UNSTABLE, false = don't
-             waitForQualityGate abortPipeline: true
-           }
-         }
-       }
+        timeout(time: 2, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
     
     stage('Push Image to Docker Hub') {         
       steps{                            
