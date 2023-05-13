@@ -30,24 +30,26 @@ pipeline {
 	          echo 'Login Completed'                
            }           
     }
-
-    stage("build & SonarQube analysis") {
-          node {
-              withSonarQubeEnv('sq1') {
-                 sh 'mvn clean package sonar:sonar'
-              }
-          }
-      }
-
-      stage("Quality Gate"){
-          timeout(time: 1, unit: 'HOURS') {
-              def qg = waitForQualityGate()
-              if (qg.status != 'OK') {
-                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
-              }
-          }
-      }
-
+stage('build && SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('sq1') {
+                    // Optionally use a Maven environment you've configured already
+                    withMaven(maven:'Maven 3.5') {
+                        sh 'mvn clean package sonar:sonar'
+                    }
+                }
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    
     stage('Push Image to Docker Hub') {         
       steps{                            
 	          sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
