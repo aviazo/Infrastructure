@@ -46,11 +46,9 @@ pipeline {
       steps{                            
 	    sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
             echo 'Push Image Completed'   
-      step([$class: 'CordellWalkerRecorder']): Activate Chuck Norris      
-	   }           
+           }           
     }      
-   
-     
+        
   } //stages 
   
   post{
