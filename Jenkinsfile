@@ -45,15 +45,17 @@ pipeline {
     stage('Push Image to Docker Hub') {         
       steps{                            
 	    sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
-            echo 'Push Image Completed'       
+            echo 'Push Image Completed'   
+	    publishers {
+            chucknorris()
+    		      }
            }           
     }      
   } //stages 
   
   post{
     always {  
-	    chuckNorris()
-      	    sh 'docker logout'           
+	    sh 'docker logout'           
     }      
   }  
 } //pipeline
