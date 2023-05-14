@@ -30,21 +30,21 @@ pipeline {
     
     stage('Build Docker Image') {         
       steps{                
-	          sh 'sudo docker build -t aviazo/hello-world-war_mvn:$BUILD_NUMBER .'           
+	    sh 'sudo docker build -t aviazo/hello-world-war_mvn:$BUILD_NUMBER .'           
             echo 'Build Image Completed'                
            }           
     }
 
     stage('Login to Docker Hub') {         
       steps{                            
-	          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'                 
-	          echo 'Login Completed'                
+	    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | sudo docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'                 
+	    echo 'Login Completed'                
            }           
     }
         
     stage('Push Image to Docker Hub') {         
       steps{                            
-	          sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
+	    sh 'sudo docker push aviazo/hello-world-war_mvn:$BUILD_NUMBER'                 
             echo 'Push Image Completed'       
            }           
     }      
@@ -52,7 +52,8 @@ pipeline {
   
   post{
     always {  
-      sh 'docker logout'           
+	    chuckNorris()
+      	    sh 'docker logout'           
     }      
   }  
 } //pipeline
